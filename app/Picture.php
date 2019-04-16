@@ -25,7 +25,11 @@ class Picture extends Model
      *
      * @var array
      */
-    protected $fillable = ['name', 'description', 'cover_image'];
+    protected $fillable = ['title', 'description','photo','album_id'];
 
+    public function album()
+    {
+        return $this->belongsTo('App\Album');
+    }
     
 }

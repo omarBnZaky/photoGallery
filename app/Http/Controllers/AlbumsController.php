@@ -133,7 +133,6 @@ class AlbumsController extends Controller
             'cover_image' => 'required|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
-        $requestData = $request->all();
         
         $album = Album::findOrFail($id);
 
@@ -156,7 +155,7 @@ class AlbumsController extends Controller
                 $album->cover_image  = $coverName;
         }
 
-        $album->update($requestData);
+        $album->save();
 
         return redirect('albums')->with('flash_message', 'Album updated!');
     }
@@ -170,7 +169,17 @@ class AlbumsController extends Controller
      */
     public function destroy($id)
     {
-        Album::destroy($id);
+        $album = Album::findOrFail($id);
+        $albumPath = public_path().'/uploads/albums/'.$album->cover_image;//the path
+
+        foreach($album->pictures as $pic){
+            $picPath = public_path().'/uploads/photos/'.$pic->photo;//the path
+            unlink($picPath);
+
+        }
+
+        unlink($albumPath);
+        $album->delete();
 
         return redirect('albums')->with('flash_message', 'Album deleted!');
     }

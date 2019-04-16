@@ -6,6 +6,8 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Picture;
+use App\Album;
+
 use Illuminate\Http\Request;
 
 class PicturesController extends Controller
@@ -21,9 +23,9 @@ class PicturesController extends Controller
         $perPage = 25;
 
         if (!empty($keyword)) {
-            $pictures = Picture::where('name', 'LIKE', "%$keyword%")
+            $pictures = Picture::where('title', 'LIKE', "%$keyword%")
                 ->orWhere('description', 'LIKE', "%$keyword%")
-                ->orWhere('cover_image', 'LIKE', "%$keyword%")
+                ->orWhere('photo', 'LIKE', "%$keyword%")
                 ->latest()->paginate($perPage);
         } else {
             $pictures = Picture::latest()->paginate($perPage);
@@ -39,7 +41,9 @@ class PicturesController extends Controller
      */
     public function create()
     {
-        return view('albums.pictures.create');
+        $albums =  Album::all();
+
+        return view('albums.pictures.create',compact('albums'));
     }
 
     /**
@@ -51,10 +55,34 @@ class PicturesController extends Controller
      */
     public function store(Request $request)
     {
+
         
-        $requestData = $request->all();
-        
-        Picture::create($requestData);
+        $this->validate($request, [
+            'title' => 'required',
+            'description' => 'required',
+            'photo' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'album_id'=> 'required'
+        ]);
+
+         $picture = new Picture;
+         $picture->title =  $request->input('title');
+         $picture->description =  $request->input('description');
+
+         $picture->album_id =  $request->input('album_id');
+
+   
+         $photo = $request->file('photo');
+
+         $extension = $photo->getClientOriginalExtension(); 
+
+         $picName = time().'.'.$extension;
+
+         $path = public_path().'/uploads/photos';
+
+         $photo->move($path,$picName);
+
+         $picture->photo  = $picName;
+         $picture->save();
 
         return redirect('albums/pictures')->with('flash_message', 'Picture added!');
     }
@@ -68,6 +96,7 @@ class PicturesController extends Controller
      */
     public function show($id)
     {
+
         $picture = Picture::findOrFail($id);
 
         return view('albums.pictures.show', compact('picture'));
@@ -83,8 +112,9 @@ class PicturesController extends Controller
     public function edit($id)
     {
         $picture = Picture::findOrFail($id);
+        $albums =  Album::all();
 
-        return view('albums.pictures.edit', compact('picture'));
+        return view('albums.pictures.edit', compact('picture','albums'));
     }
 
     /**
@@ -97,11 +127,41 @@ class PicturesController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->validate($request, [
+            'title' => 'required',
+            'description' => 'required',
+            'photo' => 'image|mimes:jpeg,png,jpg|max:2048',
+            'album_id'=> 'required'
+        ]);
         
-        $requestData = $request->all();
         
         $picture = Picture::findOrFail($id);
-        $picture->update($requestData);
+        $picture->title =  $request->input('title');
+        $picture->description =  $request->input('description');
+
+        $picture->album_id =  $request->input('album_id');
+
+
+        if($request->hasFile('photo')){
+
+                $photo = $request->file('photo');
+
+                $extension = $photo->getClientOriginalExtension(); 
+
+                $picName = time().'.'.$extension;
+
+                $path = public_path().'/uploads/photos';
+
+                $photo->move($path,$picName);
+
+                $picture->photo  = $picName;
+        }
+
+
+        $picture->save();
+
+
+        $picture->save();
 
         return redirect('albums/pictures')->with('flash_message', 'Picture updated!');
     }
@@ -115,7 +175,11 @@ class PicturesController extends Controller
      */
     public function destroy($id)
     {
-        Picture::destroy($id);
+        $picture = Picture::findOrFail($id);
+
+        $picPath = public_path().'/uploads/photos/'.$picture->photo;//the path
+        unlink($picPath);
+        $picture->delete();
 
         return redirect('albums/pictures')->with('flash_message', 'Picture deleted!');
     }

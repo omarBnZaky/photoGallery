@@ -25,9 +25,19 @@
                             <table class="table">
                                 <tbody>
                                     <tr>
-                                        <th>ID</th><td>{{ $picture->id }}</td>
+                                        <th>ID</th>
+                                        <td>{{ $picture->id }}</td>
                                     </tr>
-                                    <tr><th> Name </th><td> {{ $picture->name }} </td></tr><tr><th> Description </th><td> {{ $picture->description }} </td></tr><tr><th> Cover Image </th><td> {{ $picture->cover_image }} </td></tr>
+                                    <tr><th> Name </th><td> {{ $picture->title }} </td></tr>
+                                    
+                                    <tr><th> Description </th><td> {{ $picture->description }} </td></tr>
+                                    <tr><th> Cover Image </th>
+                                    <td> <img src="/uploads/photos/{{ $picture->photo }}" width="200px" height="150px" style="border-radius:50px;50px;"/> </td>
+                                    </tr>
+
+                                    <tr><th> album </th><td> {{ $picture->album->name }} </td></tr>
+
+                                    
                                 </tbody>
                             </table>
                         </div>

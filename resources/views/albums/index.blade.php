@@ -10,7 +10,7 @@
                     <div class="card-header">Albums</div>
                     <div class="card-body">
                         <a href="{{ url('/albums/create') }}" class="btn btn-success btn-sm" title="Add New Album">
-                            <i class="fa fa-plus" aria-hidden="true"></i> Add New
+                            <i class="fa fa-plus" aria-hidden="true"></i> upload image in this album
                         </a>
 
                         <form method="GET" action="{{ url('/albums') }}" accept-charset="UTF-8" class="form-inline my-2 my-lg-0 float-right" role="search">
@@ -41,7 +41,7 @@
         <div class="card">
         <img src="/uploads/albums/{{ $item->cover_image }}" class="card-img-top" alt="...">
         <div class="card-body">
-            <h5 class="card-title">Card title</h5>
+            <h5 class="card-title">{{$item->name}}</h5>
             <p class="card-text">{{ $item->description }}</p>
             <p class="card-text"><small class="text-muted">
             

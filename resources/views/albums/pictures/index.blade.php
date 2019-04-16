@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
         <div class="row">
-            @include('admin.sidebar')
+        {{--        @include('admin.sidebar') --}}
 
             <div class="col-md-9">
                 <div class="card">
@@ -30,14 +30,15 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>#</th><th>Name</th><th>Description</th><th>Cover Image</th><th>Actions</th>
+                                        <th>#</th><th>Name</th><th>Description</th><th>photo</th><th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($pictures as $item)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $item->name }}</td><td>{{ $item->description }}</td><td>{{ $item->cover_image }}</td>
+                                        <td>{{ $item->name }}</td><td>{{ $item->description }}</td>
+                                        <td> <img src="/uploads/photos/{{ $item->photo }}" width="200px" height="150px" style="border-radius:50px;50px;"/> </td>
                                         <td>
                                             <a href="{{ url('/albums/pictures/' . $item->id) }}" title="View Picture"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
                                             <a href="{{ url('/albums/pictures/' . $item->id . '/edit') }}" title="Edit Picture"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>

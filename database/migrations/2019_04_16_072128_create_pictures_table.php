@@ -14,10 +14,12 @@ class CreatePicturesTable extends Migration
     {
         Schema::create('pictures', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('album_id');
+            $table->string('photo');
+            $table->string('title');
+            $table->text('description');
             $table->timestamps();
-            $table->string('name')->nullable();
-            $table->text('description')->nullable();
-            $table->string('cover_image')->nullable();
+
             });
     }
 
