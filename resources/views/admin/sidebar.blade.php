@@ -12,6 +12,27 @@
                     </a>
                 </li>
             </ul>
+
+            <ul class="nav" role="tablist">
+                <li role="presentation">
+                    <a href="{{ url('/albums') }}">
+                        Albums
+                    </a>
+                </li>
+            </ul>
+
+
+            <ul class="nav" role="tablist">
+                <li role="presentation">
+                    <a href="{{ url('/albums/pictures') }}">
+                        Pictures
+                    </a>
+                </li>
+            </ul>
+
+
+
+
         </div>
     </div>
 </div>
